@@ -1,6 +1,7 @@
 #include "bits.h"
 #include <errno.h>
 #include "platform.h"
+#include "fe310_gpio.h"
 #include "gpio.h"
 
 #define MAX_GPIO_NUMBER 23

@@ -12,13 +12,6 @@ struct gpio_protocol {
 	int (*set_direction)(struct gpio_protocol *gpio, uint8_t direction);
 };
 
-struct fe310_gpio_protocol {
-	int (*init)(struct gpio_protocol *gpio, uint8_t gpio_number);
-	int (*set_value)(struct gpio_protocol *gpio, uint8_t value);
-	int (*set_direction)(struct gpio_protocol *gpio, uint8_t direction);
-	void *private_data;
-};
-
 enum Direction {
 	OUTPUT = 0,
 	INPUT  = 1

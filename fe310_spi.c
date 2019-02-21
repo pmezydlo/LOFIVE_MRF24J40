@@ -1,3 +1,4 @@
+#include "fe310_spi.h"
 #include "spi.h"
 #include "bits.h"
 #include <errno.h>
