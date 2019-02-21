@@ -42,8 +42,8 @@ int main (void)
 	ClockInit();
 	UartInit();
 
-//	struct spi_protocol *mrf_spi = install_spi_protocol();
-//	mrf_spi->init(mrf_spi);
+	struct spi_protocol *mrf_spi = install_spi_protocol();
+	mrf_spi->init(mrf_spi);
 
 	struct gpio_protocol *mrf_reset_pin = install_gpio_protocol();
 	mrf_reset_pin->init(mrf_reset_pin, MRF_RESET_PIN);
@@ -51,17 +51,11 @@ int main (void)
 	struct gpio_protocol *mrf_wake_pin = install_gpio_protocol();
 	mrf_wake_pin->init(mrf_wake_pin, MRF_WAKE_PIN);
 
-//	mrf24j40_init(mrf_spi, mrf_reset_pin, mrf_wake_pin);
+	mrf24j40_init(mrf_spi, mrf_reset_pin, mrf_wake_pin);
 
 	mrf_reset_pin->set_direction(mrf_reset_pin, OUTPUT);
 
   while(1) {
 
-	mrf_reset_pin->set_value(mrf_reset_pin, 0);
-	for (int i=0;i<10000;i++);
-
-	mrf_reset_pin->set_value(mrf_reset_pin, 1);
-	for (int i=0;i<10000;i++);
-	//while(1){}
   }
 }
