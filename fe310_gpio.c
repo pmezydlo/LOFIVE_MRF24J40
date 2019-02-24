@@ -14,21 +14,17 @@ struct fe310_gpio {
 static int fe310_gpio_init(struct gpio_protocol *gpio, uint8_t gpio_number)
 {
 	struct fe310_gpio *fe310_private_data = ((struct fe310_gpio_protocol*)gpio)->private_data;
+
 	if (gpio_number > MAX_GPIO_NUMBER || gpio_number < MIN_GPIO_NUMBER) {
 		return -EINVAL;
 	}
-//	printf("init gpio: %d\n", fe310_private_data->gpio_number);
-
 	fe310_private_data->gpio_number = gpio_number;
+	return 0;
 }
 
 static int fe310_gpio_set_direction(struct gpio_protocol *gpio, uint8_t direction)
 {
 	struct fe310_gpio *fe310_private_data = ((struct fe310_gpio_protocol*)gpio)->private_data;
-
-	//printf("gpio: %d\n", fe310_private_data->gpio_number);
-//	printf("set direction %d\n", direction);
-
 
 	if (direction == OUTPUT) {
 		GPIO_REG(GPIO_INPUT_EN)  &= ~(0x1 << fe310_private_data->gpio_number);
@@ -45,9 +41,6 @@ static int fe310_gpio_set_direction(struct gpio_protocol *gpio, uint8_t directio
 static int fe310_gpio_set_value(struct gpio_protocol *gpio, uint8_t value)
 {
 	struct fe310_gpio *fe310_private_data = ((struct fe310_gpio_protocol*)gpio)->private_data;
-//	printf("gpio: %d\n", fe310_private_data->gpio_number);
-
-//	printf("set value %d\n", value);
 
 	if (value == 0) {
 		GPIO_REG(GPIO_OUTPUT_VAL) &= ~(0x1 << fe310_private_data->gpio_number);
@@ -59,6 +52,13 @@ static int fe310_gpio_set_value(struct gpio_protocol *gpio, uint8_t value)
 	return 0;
 }
 
+static uint8_t fe310_gpio_get_value(struct gpio_protocol *gpio)
+{
+	struct fe310_gpio *fe310_private_data = ((struct fe310_gpio_protocol*)gpio)->private_data;
+
+	return (GPIO_REG(GPIO_INPUT_VAL) >> fe310_private_data->gpio_number) & BIT0;
+}
+
 struct gpio_protocol* install_gpio_protocol(void)
 {
 	struct fe310_gpio_protocol *fe310_gpio = malloc (sizeof (struct fe310_gpio_protocol));
@@ -66,6 +66,7 @@ struct gpio_protocol* install_gpio_protocol(void)
 	if (fe310_gpio != NULL) {
 		fe310_gpio->init          = &fe310_gpio_init;
 		fe310_gpio->set_value     = &fe310_gpio_set_value;
+		fe310_gpio->get_value     = &fe310_gpio_get_value;
 		fe310_gpio->set_direction = &fe310_gpio_set_direction;
 	} else {
 		return NULL;
@@ -78,9 +79,6 @@ struct gpio_protocol* install_gpio_protocol(void)
 		free(fe310_gpio);
 		return NULL;
 	}
-
-//	printf("install protocol\n");
-
 	return (struct gpio_protocol*) fe310_gpio;
 }
 

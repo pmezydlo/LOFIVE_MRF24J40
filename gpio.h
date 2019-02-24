@@ -9,6 +9,7 @@
 struct gpio_protocol {
 	int (*init)(struct gpio_protocol *gpio, uint8_t gpio_number);
 	int (*set_value)(struct gpio_protocol *gpio, uint8_t value);
+	uint8_t (*get_value)(struct gpio_protocol *gpio);
 	int (*set_direction)(struct gpio_protocol *gpio, uint8_t direction);
 };
 
